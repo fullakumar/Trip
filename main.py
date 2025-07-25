@@ -35,7 +35,7 @@ async def createTrip(tripData: TripInp, db: Session = Depends(get_db)):
 async def getTrip(db: Session = Depends(get_db)):
      return db.query(Trip).all()
 
-@app.get("/deleteTrip/{id}")
+@app.delete("/deleteTrip/{id}")
 async def getTrip(id : int ,db: Session = Depends(get_db)):
      trip = db.query(Trip).filter(Trip.id == id).first()
      if not trip:
