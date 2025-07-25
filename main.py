@@ -34,3 +34,12 @@ async def createTrip(tripData: TripInp, db: Session = Depends(get_db)):
 @app.get("/getTrip",response_model=List[TripOut])
 async def getTrip(db: Session = Depends(get_db)):
      return db.query(Trip).all()
+
+@app.get("/deleteTrip/{id}")
+async def getTrip(id : int ,db: Session = Depends(get_db)):
+     trip = db.query(Trip).filter(Trip.id == id).first()
+     if not trip:
+         raise HTTPException(status_code=404, detail="Product not found")
+     db.delete(trip)
+     db.commit()
+     return {"message": "Product deleted successfully"}
