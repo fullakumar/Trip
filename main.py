@@ -43,3 +43,20 @@ async def getTrip(id : int ,db: Session = Depends(get_db)):
      db.delete(trip)
      db.commit()
      return {"message": "Product deleted successfully"}
+
+@app.patch("/updateTrip/{id}", response_model=TripOut)
+def update_trip(
+    id: int,
+    updated_data: TripInp,
+    db: Session = Depends(get_db)
+):
+    trip = db.query(Trip).filter(Trip.id == id).first()
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+
+    for field, value in updated_data.dict(exclude_unset=True).items():
+        setattr(trip, field, value)
+
+    db.commit()
+    db.refresh(trip)
+    return trip
